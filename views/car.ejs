@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<% include head.ejs %>      <!--Include head section (same for all pages)-->
+<!--Javascripts includes-->
+<script src='/javascripts/alert.js' type='text/javascript' ></script>
+
+<!--Inline Javascript-->
+
+<body>
+<div id="alerts"></div>
+<div id="page" class=page>      <!--Div page with id=page - main container-->
+    <h1><%=car.name%></h1>
+    <br/>
+    <table class=table>
+    <tr>
+		<td width=400><img src="/images/<%=car.category%>/00<%=car.imageID%>.jpg" width=400 height=300/></td>
+		<td valign="top">
+			Typ: 
+			<%if(car.category == "S"){%> Samochód miejski <%}%>
+			<%if(car.category == "M"){%> Linuzyna <%}%>
+			<%if(car.category == "L"){%> Samochód rodzinny <%}%>
+			<%if(car.category == "XL"){%> Samochód dostawczy <%}%>
+			<%if(car.category == "E"){%> Samochód elektryczny <%}%>
+			<br/><br/>
+			Opis: <br/>
+			<%=car.description%>
+		</td>
+		<td valign="top">
+			<b><%=car.price%>0 zł / minutę <br></br>
+			<%if(car.avalible==false){%>
+				<b>Samochód wypożyczony</b>
+			<%} else {%>
+				<% if(user && user.name){ %>
+					<% if(hasCar){ %>
+						Nie możesz wypożyczyć więcej niż jednego samochodu na raz.<br/>
+						<a class=link href=/user>Przejdź do moich wypożyczeń</a>
+					<%} else {%>
+						<a class=button href=/regcar/<%=car.carID%>>Wypożyczam</a>
+					<%}%>
+				<%} else {%>
+					Aby wypożyczyć samochód <a class=link href="/auth/google" tabindex="50">zaloguj się</a>.
+				<%}%>
+			<%}%>
+		</td>
+    </tr>
+    </table>
+  
+</div>
+<% include header.ejs %>      <!--Include header (top menu logo etc)-->
+<% include footer.ejs %>      <!--Include footer-->
+</body>
+</html>

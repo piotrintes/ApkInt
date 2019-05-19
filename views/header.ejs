@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<div class=header>
+    <div class=topLeft>
+        logo strony
+    </div>
+    <div class=topRight>
+        <% if(user && user.name){ %>
+            <a class=link href="/logout" tabindex="50">Wyloguj</a>
+        <% } else{ %>
+            <a class=link href="/auth/google" tabindex="50">Logowanie</a>
+        <% } %>
+    </div>
+    <div class=topBar>      <!--This should configure itself dependent of options and views-->
+        <a class=
+           <% if(title=="Strona główna"){ %>
+               menu_s
+        <% } else{ %>
+           menu
+                <% } %> href="/" tabindex="1">Strona główna
+        </a>
+        <a class=
+           <% if(title=="Samochody"){ %>
+               menu_s
+        <% } else{ %>
+           menu
+                <% } %> href="/cars/all" tabindex="2">Samochody
+        </a>
+        <!-- Uzytkownik niezalogowany:   -->
+        <% if(user && user.name){ %>
+            <a class=
+               <% if(title=="Moje wypożyczenia"){ %>
+                   menu_s
+            <% } else{ %>
+               menu
+                    <% } %> href="/user" tabindex="1">Moje wypożyczenia
+            </a>
+        <% } %>
+    </div>
+</div>

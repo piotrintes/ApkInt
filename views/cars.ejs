@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<% include head.ejs %>      <!--Include head section (same for all pages)-->
+<!--Javascripts includes-->
+<script src='/javascripts/alert.js' type='text/javascript' ></script>
+
+<!--Inline Javascript-->
+
+<body>
+<div id="alerts"></div>
+<div id="page" class=page>      <!--Div page with id=page - main container-->
+    <h1>Nasze samochody</h1>
+    <center>
+        <a class=button href="/cars/all">Dowolny</a>
+        <a class=button href="/cars/E">Samochód elektryczny</a>
+        <a class=button href="/cars/S">Samochód miejski</a>
+        <a class=button href="/cars/M">Linuzyna</a>
+        <a class=button href="/cars/L">Samochód rodzinny</a>
+        <a class=button href="/cars/XL">Samochód dostawczy</a>
+    </center>
+    <br/>
+    
+    
+    <table class=table>
+    <tr>
+      <th>Zdjęcie</th>
+      <th>Model</th>
+      <th>Typ</th>
+      <th>Cennik</th>
+      <th>Rezerwacja</th>
+    </tr>
+    <% let isFirst=true;
+    list.forEach(function (car) { %>
+    <tr <%if(isFirst==true){%> style="background-color:#ffeeaa" <%}%>>
+      <td width=200><img src="/images/<%=car.category%>/00<%=car.imageID%>.jpg" width=200 height=150/></td>
+      <td><%=car.name%></td>
+      <td>
+		<%if(car.category == "S"){%> Samochód miejski <%}%>
+		<%if(car.category == "M"){%> Linuzyna <%}%>
+		<%if(car.category == "L"){%> Samochód rodzinny <%}%>
+		<%if(car.category == "XL"){%> Samochód dostawczy <%}%>
+		<%if(car.category == "E"){%> Samochód elektryczny <%}%>
+      </td>
+      <td> <%if(isFirst==true){%> <b> <%}%><%=car.price%>0 zł / minutę <%if(isFirst==true){%> <br/><br/> NAJLEPSZA OFERTA! </b> <%}%></td>
+      <td>
+		<%if(car.avalible==false){%>
+			<b>Samochód wypożyczony</b>
+		<%} else {%>
+			<a class=button href=/car/<%=car.carID%>>Wypożycz</a>
+		<%}%>
+      </td>
+    </tr>
+    <% isFirst = false; })%>
+  </table>
+  
+</div>
+<% include header.ejs %>      <!--Include header (top menu logo etc)-->
+<% include footer.ejs %>      <!--Include footer-->
+</body>
+</html>

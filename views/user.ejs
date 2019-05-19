@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<% include head.ejs %>      <!--Include head section (same for all pages)-->
+<!--Javascripts includes-->
+<!--<script src='/javascripts/alert.js' type='text/javascript' ></script>-->
+
+<!--Inline Javascript-->
+<script type="text/javascript">
+	window.onload = function()
+	{
+		<% if(list.length > 0) { %>
+			printAct(Date.parse("<%=list[0].time1%>"),<%=list[0].price%>)
+		<%}%>
+	}
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+	async function printAct(time1,pricePMinute)
+	{
+		while (1){
+			let date = new Date();
+			date.setHours( date.getHours() + 2 );
+			let time = (date - time1)/60000;
+			
+			let html = (pricePMinute*time).toFixed(2) + " zł ";
+			document.getElementById("actPrice").innerHTML=html;
+			
+			html = date.toISOString().replace(/T/, ' ').replace(/\..+/, '') + 
+			"<br/><br/><b>Czas wypożyczenia:" + time.toFixed(2) + " minut</b>"
+			
+			document.getElementById("actTime").innerHTML=html;
+			await sleep(500);
+		}
+	}
+</script>
+
+<body>
+<div id="alerts"></div>
+<div id="page" class=page>      <!--Div page with id=page - main container-->
+	
+	<% if(list.length == 0) { %>
+		<h1>Nie masz obecnie żadnych wypożyczeń.</h1>
+		<center><a class=button href="/cars/all">Sprawdź naszą ofertę</a></center>
+	<% } else { %>
+		<h1>Aktywne wypożyczenie:</h1>
+		<center>
+		<% if(list[0].time2 == null) {  %>
+			<table class=table>
+				<tr>
+					<th>Zdjęcie</th>
+					<th>Model</th>
+					<th>Typ</th>
+					<th>Cennik</th>
+					<th>Daty wypożyczenia</th>
+					<th>Aktualna kwota</th>
+					<th>Opcje</th>
+				</tr>
+				<tr>
+				<td width=200><img src="/images/<%=list[0].category%>/00<%=list[0].imageID%>.jpg" width=200 height=150/></td>
+				<td><%=list[0].name%></td>
+				<td>
+					<%if(list[0].category == "S"){%> Samochód miejski <%}%>
+					<%if(list[0].category == "M"){%> Linuzyna <%}%>
+					<%if(list[0].category == "L"){%> Samochód rodzinny <%}%>
+					<%if(list[0].category == "XL"){%> Samochód dostawczy <%}%>
+					<%if(list[0].category == "E"){%> Samochód elektryczny <%}%>
+				</td>
+				<td> <%=list[0].price%>0 zł / minutę </td>
+				<td> 
+					<%=list[0].time1.toISOString().replace(/T/, ' ').replace(/\..+/, '')%> <br/>
+					<div id="actTime"></div>
+				</td>
+				<td> <b> <div id="actPrice"></div> </b></td>
+				<td> <a class=button href=/returncar/<%=list[0].reservationID%>/<%=list[0].carID%>>Zwróć samochód</a> </td>
+			</tr>
+			</table>
+		<% } else { %>
+			<b>Nie masz żadnych aktywnych wypożyczeń</b>
+		<% } %>
+		<br/>
+		<br/>
+		</center>
+		<h1>Poprzednie wypożyczenia:</h1>
+		
+		<table class=table>
+			<tr>
+			<th>Zdjęcie</th>
+			<th>Model</th>
+			<th>Typ</th>
+			<th>Cennik</th>
+			<th>Daty</th>
+			<th>Kwota</th>
+			</tr>
+			<% list.forEach(function (elem) { %>
+			<% if(elem.time2 != null) {  %>
+			<tr>
+				<td width=200><img src="/images/<%=elem.category%>/00<%=elem.imageID%>.jpg" width=200 height=150/></td>
+				<td><%=elem.name%></td>
+				<td>
+					<%if(elem.category == "S"){%> Samochód miejski <%}%>
+					<%if(elem.category == "M"){%> Linuzyna <%}%>
+					<%if(elem.category == "L"){%> Samochód rodzinny <%}%>
+					<%if(elem.category == "XL"){%> Samochód dostawczy <%}%>
+					<%if(elem.category == "E"){%> Samochód elektryczny <%}%>
+				</td>
+				<td> <%=elem.price%>0 zł / minutę </td>
+				<td> <%=elem.time1.toISOString().replace(/T/, ' ').replace(/\..+/, '')%> <br/>
+				<%=elem.time2.toISOString().replace(/T/, ' ').replace(/\..+/, '')%> <br/><br/>
+				<% let time = (elem.time2 - elem.time1)/60000;%>
+				<b>Czas wypożyczenia: <%=time.toFixed(2)%> minut</b>
+				</td>
+				<td> <b><%=(elem.price*time).toFixed(2)%> zł </b></td>
+			</tr>
+			<% }}) %>
+		</table>
+	<% } %>
+</div>
+<% include header.ejs %>      <!--Include header (top menu logo etc)-->
+<% include footer.ejs %>      <!--Include footer-->
+</body>
+</html>
